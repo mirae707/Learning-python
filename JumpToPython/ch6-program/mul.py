@@ -7,3 +7,8 @@
     3의 배수와 5의 배수는 어떻게 찾지?
     3의 배수와 5의 배수가 겹칠 때는 어떻게 하지?
 """
+result = 0
+for n in range(1, 1000):
+    if n % 3 == 0 or n % 5 == 0:
+        result += n
+print(result)
