@@ -11,7 +11,7 @@ def cal_target(ticker):
     yesterday = df.iloc[-2]
     today = df.iloc[-1]
     yesterday_range = yesterday['high'] - yesterday['low']
-    target = today['open'] + yesterday_range * 0.5
+    target = today['open'] + yesterday_range * 0.4
     return target
 
 # 5일치 이동평균선 구하기
@@ -30,7 +30,7 @@ f.close()
 upbit = pyupbit.Upbit(access, secret)
 
 # 변수 설정
-op_mode = False
+#op_mode = False
 #hold = False
 
 while True:
@@ -48,8 +48,7 @@ while True:
         else:
             hold = False
 
-        # 5만원 이상인 경우 코인 잔고가 0으로 나오므로 제외
-        if price > 50000 or my_balance < 50000:  # 코인가격이 5만원 초과이거나 내 계좌 잔고가 5만원 미만인 경우
+        if my_balance < 50000:  # 내 계좌 잔고가 5만원 미만인 경우
             op_mode = False
         else:
             op_mode = True
@@ -57,8 +56,8 @@ while True:
             now = datetime.datetime.now()
             # 매도 시도
             #if now.hour == 8 and now.minute == 59 and 50 <= now.second <= 59:
-            if 6 <= now.hour <= 9:
-                if op_mode == True and hold == True:
+            if 7 <= now.hour <= 9:
+                if hold == True:
                     #coin_balance = upbit.get_balance(ticker)
                     upbit.sell_market_order(ticker, coin_balance)
                     #hold = False
@@ -89,4 +88,4 @@ while True:
 
         except:
             pass
-        time.sleep(5)
+        time.sleep(3)
