@@ -37,6 +37,7 @@ while True:
     for ticker in tickers:
         target = cal_target(ticker)  # 목표가격
         coin_balance = upbit.get_balance(ticker)  # 코인 잔고
+        my_balance = upbit.get_balance("KRW")  # 원화 잔고
         price = pyupbit.get_current_price(ticker)  # 코인 현재가
         ma = get_yesterday_ma5(ticker)  # 코인 5일 이동평균선
         limit = target * 0.9  # 손절 가격
@@ -48,7 +49,7 @@ while True:
             hold = False
 
         # 5만원 이상인 경우 코인 잔고가 0으로 나오므로 제외
-        if price > 50000:
+        if price > 50000 or my_balance < 50000:  # 코인가격이 5만원 초과이거나 내 계좌 잔고가 5만원 미만인 경우
             op_mode = False
         else:
             op_mode = True
