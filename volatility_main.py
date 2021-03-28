@@ -3,7 +3,8 @@ import time
 import datetime
 
 #ticker = "KRW-TRX"
-tickers = pyupbit.get_tickers("KRW")
+#tickers = pyupbit.get_tickers("KRW")
+tickers = ["KRW-BTC", "KRW-ETH", "KRW-ADA", "KRW-XRP", "KRW-LTC", "KRW-LINK", "KRW-BCH", "KRW-XLM", "KRW-VET", "KRW-DOGE", "KRW-TRX", "KRW-ATOM", "KRW-THETA", "KRW-DOT", "KRW-CRO", "KRW-EOS", "KRW-BSV", "KRW-BTT", "KRW-XTZ", "KRW-XEM", "KRW-NEO", "KRW-CHZ", "KRW-HBAR", "KRW-TFUEL", "KRW-ENJ", "KRW-NPXS", "KRW-ZIL", "KRW-BAT", "KRW-MANA", "KRW-ETC", "KRW-WAVES", "KRW-ICX", "KRW-ONT", "KRW-ZRX", "KRW-SC", "KRW-ANKR", "KRW-QTUM", "KRW-IOST", "KRW-OMG", "KRW-BTG", "KRW-MVL", "KRW-LSK", "KRW-STORJ"]
 
 # 목표가 구하기
 def cal_target(ticker):
@@ -41,6 +42,7 @@ while True:
         price = pyupbit.get_current_price(ticker)  # 코인 현재가
         ma = get_yesterday_ma5(ticker)  # 코인 5일 이동평균선
         limit = target * 0.9  # 손절 가격
+        profit = target * 1.1
 
         # 지갑에 코인을 보유하고 있는지 조회
         if coin_balance > 0:
@@ -55,8 +57,7 @@ while True:
         try:
             now = datetime.datetime.now()
             # 매도 시도
-            #if now.hour == 8 and now.minute == 59 and 50 <= now.second <= 59:
-            if now.hour == 8 and 50 <= now.minute <= 59:
+            if now.hour == 9 and 10 <= now.minute <= 12:
                 if hold == True:
                     #coin_balance = upbit.get_balance(ticker)
                     upbit.sell_market_order(ticker, coin_balance)
@@ -71,21 +72,23 @@ while True:
                 #op_mode = True
 
             # 조건을 확인한 후 매수 시도
-            #elif op_mode == True and price >= target and hold == False and ma < price:
+            if op_mode == True and price >= target and hold == False and ma < price:
                 # 매수
                 #krw_balance = upbit.get_balance("KRW")
-                #upbit.buy_market_order(ticker, 50000)
+                upbit.buy_market_order(ticker, 50000)
                 #hold = True
-
             # 매수가에서 10% 이상 하락하면 손절
-            #elif hold == True and price < limit:
+            if hold == True and limit > price:
                 #coin_balance = upbit.get_balance(ticker)
-                #upbit.sell_market_order(ticker, coin_balance)
+                upbit.sell_market_order(ticker, coin_balance)
                 #hold = False
+            # 매수가에서 10% 이상 수익나면 익절
+            if hold == True and profit < price:
+                upbit.sell_market_order(ticker, coin_balance)
 
             # 상태 출력
             print(f"현재시간: {now} 코인: {ticker}목표가: {target} 현재가: {price} 보유상태: {hold} 동작상태: {op_mode}")
 
         except:
             pass
-        time.sleep(2)
+        time.sleep(1)
