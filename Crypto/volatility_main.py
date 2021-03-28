@@ -64,7 +64,7 @@ while True:
                 if hold == True:
                     #coin_balance = upbit.get_balance(ticker)
                     upbit.sell_market_order(ticker, coin_balance)
-                    break
+                break
                     #hold = False
                 #op_mode = False
                 #time.sleep(10)
