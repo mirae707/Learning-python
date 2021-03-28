@@ -25,7 +25,7 @@ def get_yesterday_ma5(ticker):
     return ma[-2]
 
 # 객체 생성
-f = open("./upbit.txt")
+f = open("upbit.txt")
 lines = f.readlines()
 access = lines[0].strip()
 secret = lines[1].strip()
