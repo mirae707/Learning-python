@@ -25,7 +25,7 @@ def get_yesterday_ma5(ticker):
     return ma[-2]
 
 # 객체 생성
-f = open("upbit.txt")
+f = open("/home/chchdelm3/python/Crypto/upbit.txt")
 lines = f.readlines()
 access = lines[0].strip()
 secret = lines[1].strip()
@@ -35,6 +35,7 @@ upbit = pyupbit.Upbit(access, secret)
 # 변수 설정
 #op_mode = False
 #hold = False
+print("It's", datetime.datetime.now(), "Start Auto Trading! Hope your success!!")
 
 while True:
     now = datetime.datetime.now()
