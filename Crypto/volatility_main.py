@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import pyupbit
 import time
 import datetime
@@ -35,6 +37,7 @@ upbit = pyupbit.Upbit(access, secret)
 #hold = False
 
 while True:
+    now = datetime.datetime.now()
     for ticker in tickers:
         target = cal_target(ticker)  # 목표가격
         coin_balance = upbit.get_balance(ticker)  # 코인 잔고
@@ -55,12 +58,13 @@ while True:
         else:
             op_mode = True
         try:
-            now = datetime.datetime.now()
+            #now = datetime.datetime.now()
             # 매도 시도
-            if now.hour == 9 and 10 <= now.minute <= 12:
+            if now.hour == 8 and 57 <= now.minute <= 59:
                 if hold == True:
                     #coin_balance = upbit.get_balance(ticker)
                     upbit.sell_market_order(ticker, coin_balance)
+                    break
                     #hold = False
                 #op_mode = False
                 #time.sleep(10)
@@ -77,14 +81,16 @@ while True:
                 #krw_balance = upbit.get_balance("KRW")
                 upbit.buy_market_order(ticker, 50000)
                 #hold = True
-            # 매수가에서 10% 이상 하락하면 손절
+            # 목표가에서 10% 이상 하락하면 손절
             if hold == True and limit > price:
                 #coin_balance = upbit.get_balance(ticker)
                 upbit.sell_market_order(ticker, coin_balance)
+                tickers.remove(ticker)
                 #hold = False
-            # 매수가에서 10% 이상 수익나면 익절
+            # 목표가에서 10% 이상 수익나면 익절
             if hold == True and profit < price:
                 upbit.sell_market_order(ticker, coin_balance)
+                tickers.remove(ticker)
 
             # 상태 출력
             print(f"현재시간: {now} 코인: {ticker}목표가: {target} 현재가: {price} 보유상태: {hold} 동작상태: {op_mode}")
@@ -92,3 +98,5 @@ while True:
         except:
             pass
         time.sleep(1)
+    if now.hour == 9 and now.minute == 0 and 0 <= now.second <= 59:
+        break
