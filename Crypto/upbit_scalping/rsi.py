@@ -27,4 +27,3 @@ def cal_rsi(ticker):
 
     rsi = get_rsi(df, 14).iloc[-1]
     return rsi
-print(cal_rsi("KRW-ETH"))
