@@ -63,7 +63,7 @@ while True:
 
             # 매도 시도
             if 8 <= now.hour <= 9:
-                if hold == True:
+                if hold(coin_balance) == True:
                     upbit.sell_market_order(ticker, coin_balance)
                     print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!")
                     time.sleep(1)
