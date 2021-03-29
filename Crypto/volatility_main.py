@@ -62,7 +62,7 @@ while True:
             profit = target * 1.15 # 익절 가격
 
             # 매도 시도
-            if 8 <= now.hour <= 9:
+            if now.hour == 8 and 50 <= now.minute <= 59: 
                 if hold(coin_balance) == True:
                     upbit.sell_market_order(ticker, coin_balance)
                     print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!")
