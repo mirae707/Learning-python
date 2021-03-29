@@ -59,31 +59,38 @@ while True:
             ma = get_yesterday_ma5(ticker)  # 코인 5일 이동평균선
 
             limit = target * 0.9  # 손절 가격
-            profit = target * 1.1 # 익절 가격
+            profit = target * 1.15 # 익절 가격
 
             # 매도 시도
             if 8 <= now.hour <= 9:
                 if hold == True:
                     upbit.sell_market_order(ticker, coin_balance)
+                    print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!")
                     time.sleep(1)
 
+            # 매일 9시에 코인 리스트 초기화
+            elif now.hour == 9 and now.minute == 0 and 0 <= now.second <= 10:
+                tickers = pyupbit.get_tickers("KRW")
+
             # 조건을 확인한 후 매수 시도
-            elif op_mode(my_balance) == True and target <= price <= (target * 1.15) and hold(coin_balance) == False and ma < price:
+            elif op_mode(my_balance) == True and target <= price <= (target * 1.1) and hold(coin_balance) == False and ma < price:
                 # 매수
                 upbit.buy_market_order(ticker, 50000)
-                print(f"코인 {ticker} 를 찾아서 매수했습니다. 얼마나 오를까요? 5%만 오르길!")
+                print(f"현재시간 {now} 코인 {ticker} 를 찾아서 매수했습니다. 얼마나 오를까요? 5%만 오르길!")
                 time.sleep(1)
 
             # 목표가에서 10% 이상 하락하면 손절
             elif hold(coin_balance) == True and limit > price:
                 upbit.sell_market_order(ticker, coin_balance)
-                print(f"너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.")
+                print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.")
+                tickers.remove(ticker)
                 time.sleep(1)
 
-            # 목표가에서 10% 이상 수익나면 익절
+            # 목표가에서 15% 이상 수익나면 익절
             elif hold(coin_balance) == True and profit < price:
                 upbit.sell_market_order(ticker, coin_balance)
-                print(f"목표치에 도달했습니다! {ticker}를 매도 하겠습니다.")
+                print(f"현재시간 {now} 목표치에 도달했습니다! {ticker}를 매도 하겠습니다.")
+                tickers.remove(ticker)
                 time.sleep(1)
             # 상태 출력
             #print(f"현재시간: {now} 코인: {ticker} 목표가: {target} 현재가: {price} 보유상태: {hold} 동작상태: {op_mode}")
