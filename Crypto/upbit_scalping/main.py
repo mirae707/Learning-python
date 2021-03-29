@@ -30,11 +30,11 @@ while True:
     current_volume = df.iloc[-1]['volume'] # 현재 거래량
 
     bband_width = bb(ticker)
-    rsi =  cal_rsi(ticker)
-    macd = cal_macd(ticker)
+    rsi_value =  cal_rsi(ticker)
+    macd_value = cal_macd(ticker)
 
     try:
-        if current_volume > target_volume and bband_width < 0.02 and rsi < 35 and macd == 'buy' and op_mode == True and hold == False:
+        if current_volume > target_volume and bband_width < 0.02 and rsi_value < 35 and macd_value == 'buy' and op_mode == True and hold == False:
             limit = price * 0.09 # 손절 가격
             profit = price * 1.01 # 익절 가격
             my_balance = upbit.get_balance("KRW") - 1000 # 원화 잔고
