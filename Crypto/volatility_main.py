@@ -71,6 +71,7 @@ while True:
             # 매일 9시에 코인 리스트 초기화
             elif now.hour == 9 and now.minute == 0 and 0 <= now.second <= 10:
                 tickers = pyupbit.get_tickers("KRW")
+                time.sleep(5)
 
             # 조건을 확인한 후 매수 시도
             elif op_mode(my_balance) == True and target <= price <= (target * 1.1) and hold(coin_balance) == False and ma < price:
