@@ -22,6 +22,8 @@ end_balance = upbit.get_balance("KRW")
 op_mode = False # False 작동안함 True 작동함
 hold = False # 코인 보유 여부
 
+print("자동매매를 시작합니다. 편히 쉬고 계세요 돈은 제가 벌겠습니다 :)")
+
 while True:
     df = pyupbit.get_ohlcv(ticker, interval="minute5", count=100) # 5분봉 데이터 가져오기
 
