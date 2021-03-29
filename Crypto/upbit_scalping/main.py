@@ -25,10 +25,10 @@ hold = False # 코인 보유 여부
 print("자동매매를 시작합니다. 편히 쉬고 계세요 돈은 제가 벌겠습니다 :)")
 
 while True:
-    df = pyupbit.get_ohlcv(ticker, interval="minute5", count=100) # 5분봉 데이터 가져오기
+    df = pyupbit.get_ohlcv(ticker, interval="minute5", count=10) # 5분봉 데이터 가져오기
 
     price = pyupbit.get_current_price(ticker) # 현재 코인 가격
-    target_volume = np.mean(df.iloc[90:100]['volume']) * 1.5 # 목표 거래량
+    target_volume = np.mean(df.iloc[:10]['volume']) * 1.5 # 목표 거래량
     current_volume = df.iloc[-1]['volume'] # 현재 거래량
 
     bband_width = bb(ticker)

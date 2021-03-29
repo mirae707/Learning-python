@@ -1,5 +1,7 @@
 import requests
 import pandas as pd
+import pyupbit
+import numpy as np
 #import time
 
 def cal_macd(ticker):
@@ -11,6 +13,10 @@ def cal_macd(ticker):
     df = pd.DataFrame(data)
     df=df.iloc[::-1]
     df=df['trade_price']
+
+#    df = pyupbit.get_ohlcv(ticker, interval="minute5", count=100)
+#    df = df.iloc[-1]
+#    df = df['close']
 
     exp1 = df.ewm(span=12, adjust=False).mean()
     exp2 = df.ewm(span=26, adjust=False).mean()

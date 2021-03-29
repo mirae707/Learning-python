@@ -1,13 +1,12 @@
-import pandas as pd
 #import datetime
 import requests
 import pandas as pd
 #import time
 import numpy
 
-def bb(symbol):
+def bb(ticker):
     url = "https://api.upbit.com/v1/candles/minutes/5"
-    querystring = {"market":symbol,"count":"100"}
+    querystring = {"market":ticker,"count":"100"}
     response = requests.request("GET", url, params=querystring)
     data = response.json()
     df = pd.DataFrame(data)
