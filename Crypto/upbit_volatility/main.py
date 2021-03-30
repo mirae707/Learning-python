@@ -16,6 +16,8 @@ def cal_target(ticker):
     today = df.iloc[-1]
     yesterday_range = yesterday['high'] - yesterday['low']
     noise = 1 - abs(yesterday['open'] - yesterday['close']) / (yesterday['high'] - yesterday['low'])
+    if noise < 0.5:
+        noise = 0.5
     target = today['open'] + yesterday_range * noise
     return target
 
@@ -58,7 +60,7 @@ while True:
             time.sleep(1)
             price = pyupbit.get_current_price(ticker)  # 코인 현재가
             ma = get_yesterday_ma5(ticker)  # 코인 5일 이동평균선
-            profit = target * 1.06 # 익절 가격
+            profit = round((target * 1.06), 0) # 익절 가격
 
             # 매일 9시에 코인 리스트 초기화
             if now.hour == 9 and now.minute == 0 and 0 <= now.second <= 10:
@@ -70,15 +72,14 @@ while True:
                 # 매수
                 unit = 50000 / target
                 upbit.buy_limit_order(ticker, target, unit) # 목표가로 지정가 매수
-                time.sleep(10)
-                coin_balance = 0
+                time.sleep(3)
                 print(f"코인: {ticker}를 현재가격: {price} -> 목표가격: {target}으로 예약 매수 했습니다.")
+                coin_balance = 0
                 while coin_balance == 0:
                     coin_balance = upbit.get_balance(ticker)  # 코인 잔고
                     time.sleep(1)
                     print("예약 매수가 체결되길 기다리는 중입니다....")
                     if coin_balance > 0:
-                        time.sleep(10)
                         upbit.sell_limit_order(ticker, profit, coin_balance) # 목표가로 지정가 예약 매도
                         temp_tickers.append(ticker) # 구매한 코인 임시 저장 -> 손절하기 위한 리스트로 보냄
                         tickers.remove(ticker) # 매수한 코인 리스트에서 삭제
@@ -95,14 +96,11 @@ while True:
                 upbit.sell_market_order(ticker, coin_balance)
                 print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!")
                 temp_tickers.remove(ticker)
-                time.sleep(1)
             # 목표가에서 3% 이상 하락하면 손절
             elif limit > price:
                 cancel_order(ticker)
                 upbit.sell_market_order(ticker, coin_balance)
                 print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.")
                 temp_tickers.remove(ticker)
-                time.sleep(1)
-        time.sleep(1)
     except:
         pass
