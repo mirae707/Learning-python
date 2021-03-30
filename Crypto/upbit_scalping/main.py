@@ -1,9 +1,6 @@
 from bollinger import *
-from macd import *
 from rsi import *
-#from stoch_rsi import *
 import pyupbit
-import numpy as np
 import time
 
 ticker = "KRW-TRX"
@@ -25,18 +22,12 @@ hold = False # 코인 보유 여부
 print("자동매매를 시작합니다. 편히 쉬고 계세요 돈은 제가 벌겠습니다 :)")
 
 while True:
-    df = pyupbit.get_ohlcv(ticker, interval="minute5", count=10) # 5분봉 데이터 가져오기
-
     price = pyupbit.get_current_price(ticker) # 현재 코인 가격
-    target_volume = np.mean(df.iloc[:10]['volume']) * 1.5 # 목표 거래량
-    current_volume = df.iloc[-1]['volume'] # 현재 거래량
-
-    bband_width = bb(ticker)
-    rsi_value =  cal_rsi(ticker)
-    macd_value = cal_macd(ticker)
+    bband_width = bb(ticker) # 밴드폭 비율 계산
+    rsi_value =  cal_rsi(ticker) # rsi 변동 수치
 
     try:
-        if current_volume > target_volume and bband_width < 0.02 and rsi_value < 35 and macd_value == 'buy' and op_mode == True and hold == False:
+        if bband_width < 0.02 and rsi_value == True and op_mode == True and hold == False:
             limit = price * 0.09 # 손절 가격
             profit = price * 1.01 # 익절 가격
             my_balance = upbit.get_balance("KRW") - 1000 # 원화 잔고

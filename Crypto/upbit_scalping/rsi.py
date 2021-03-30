@@ -26,4 +26,10 @@ def cal_rsi(ticker):
         return pd.Series(100 - (100 / (1 + RS)), name="RSI")
 
     rsi = get_rsi(df, 14).iloc[-1]
-    return rsi
+    last_rsi = get_rsi(df, 14).iloc[-2]
+
+    if rsi - last_rsi > 0:
+        result = True
+    else:
+        result = False
+    return result
