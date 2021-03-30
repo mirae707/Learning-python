@@ -55,7 +55,7 @@ while True:
     try:
         now = datetime.datetime.now()
         for ticker in tickers:
-            target = cal_target(ticker)  # 목표가격
+            target = round(cal_target(ticker), 0)  # 목표가격
             my_balance = upbit.get_balance("KRW")  # 원화 잔고
             time.sleep(1)
             price = pyupbit.get_current_price(ticker)  # 코인 현재가
@@ -74,13 +74,18 @@ while True:
                 upbit.buy_limit_order(ticker, target, unit) # 목표가로 지정가 매수
                 time.sleep(3)
                 print(f"코인: {ticker}를 현재가격: {price} -> 목표가격: {target}으로 예약 매수 했습니다.")
-                coin_balance = 0
-                while coin_balance == 0:
-                    coin_balance = upbit.get_balance(ticker)  # 코인 잔고
-                    time.sleep(1)
+                state = 'wait'
+                while state == 'wait':
+                    try:
+                        state = upbit.get_order(ticker)[0].get('state')
+                    except:
+                        state = 'done'
+                        pass
                     print("예약 매수가 체결되길 기다리는 중입니다....")
-                    if coin_balance > 0:
-                        time.sleep(10)
+                    time.sleep(1)
+                    if state != 'wait':
+                        time.sleep(3)
+                        coin_balance = upbit.get_balance(ticker)  # 코인 잔고
                         upbit.sell_limit_order(ticker, profit, coin_balance) # 목표가로 지정가 예약 매도
                         temp_tickers.append(ticker) # 구매한 코인 임시 저장 -> 손절하기 위한 리스트로 보냄
                         tickers.remove(ticker) # 매수한 코인 리스트에서 삭제
