@@ -77,7 +77,7 @@ while True:
                         upbit.sell_limit_order(ticker, profit, coin_balance) # 목표가로 지정가 예약 매도
                         temp_tickers.append(ticker) # 구매한 코인 임시 저장 -> 손절하기 위한 리스트로 보냄
                         tickers.remove(ticker) # 매수한 코인 리스트에서 삭제
-                        waiting == False
+                        waiting = False
                 print(f"현재시간 {now} 코인 {ticker} 를 찾아서 매수했습니다. 얼마나 오를까요? 5%만 오르길!")
 
         for ticker in temp_tickers:
