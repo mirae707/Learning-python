@@ -80,10 +80,11 @@ while True:
                     time.sleep(1)
                     print("예약 매수가 체결되길 기다리는 중입니다....")
                     if coin_balance > 0:
+                        time.sleep(10)
                         upbit.sell_limit_order(ticker, profit, coin_balance) # 목표가로 지정가 예약 매도
                         temp_tickers.append(ticker) # 구매한 코인 임시 저장 -> 손절하기 위한 리스트로 보냄
                         tickers.remove(ticker) # 매수한 코인 리스트에서 삭제
-                        print(f"현재시간 {now} 코인 {ticker} 매수에 성공했습니다. 얼마나 오를까요? 5%만 오르길!\n매수가격: {target} -> 목표가격: {profit} 으로 예약 매도 주문했습니다.")
+                        print(f"현재시간 {now} 코인 {ticker} 매수에 성공했습니다. 얼마나 오를까요? 5%만 오르길!\n매수가격: {target} -> 목표가격: {profit} 으로 예약 매도 주문했습니다.\n")
 
         for ticker in temp_tickers:
             target = cal_target(ticker)  # 목표가격
@@ -94,13 +95,13 @@ while True:
             if now.hour == 8 and 55 <= now.minute <= 59:
                 cancel_order(ticker)
                 upbit.sell_market_order(ticker, coin_balance)
-                print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!")
+                print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!\n")
                 temp_tickers.remove(ticker)
             # 목표가에서 3% 이상 하락하면 손절
             elif limit > price:
                 cancel_order(ticker)
                 upbit.sell_market_order(ticker, coin_balance)
-                print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.")
+                print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.\n")
                 temp_tickers.remove(ticker)
     except:
         pass
