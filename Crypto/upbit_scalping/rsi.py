@@ -28,7 +28,7 @@ def cal_rsi(ticker):
     rsi = get_rsi(df, 14).iloc[-1]
     last_rsi = get_rsi(df, 14).iloc[-2]
 
-    if rsi - last_rsi > 0:
+    if rsi - last_rsi > 10:
         result = True
     else:
         result = False
