@@ -56,6 +56,17 @@ def cancel_order(ticker):
     upbit.cancel_order(ret)
     print(f"{ticker}의 미체결된 거래내역을 취소했습니다.")
 
+def order_state(ticker):
+    try:
+        state = upbit.get_order(ticker)[0].get('state')
+        if state > 'wait':
+            state = True
+        else:
+            state = False
+    except:
+        state = False
+    return state
+
 print("자동매매를 시작합니다. 꼭 성투하세요!\n적절한 코인을 찾는중입니다....")
 
 while True:
@@ -73,29 +84,34 @@ while True:
             limit = round((target * 0.97), 0)  # 손절 가격
 
             # 전날 거래 전량 매도
-            if now.hour == 8 and 25 <= now.minute <= 59 and hold(coin_balance) == True:
-                cancel_order(ticker)
-                time.sleep(30)
-                upbit.sell_market_order(ticker, coin_balance)
-                print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!\n")
+            if now.hour == 8 and 29 <= now.minute <= 59:
+                if order_state(ticker) == True:
+                    cancel_order(ticker)
+                    time.sleep(5)
+                    coin_balance = upbit.get_balance(ticker)
+                    upbit.sell_market_order(ticker, coin_balance)
+                    print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!\n")
 
-            elif now.hour == 9 and now.minute == 0 and 0 <= now.second <= 10:
+            elif now.hour == 9 and now.minute == 0 and 0 <= now.second <= 30:
                 tickers = pyupbit.get_tickers("KRW") # 코인 전체 불러오기
-                time.sleep(10)
-
-            # 조건을 확인한 후 매수 시도
-            elif op_mode(my_balance) == True and hold(coin_balance) == False and  target <= price <= (target * 1.001) and ma < price:
-                # 매수
-                upbit.buy_market_order(ticker, 50000)
                 time.sleep(30)
+
+            # 조건을 확인한 후 매수
+            elif op_mode(my_balance) == True and hold(coin_balance) == False and order_state(ticker) == False and target <= price <= (target * 1.001) and ma < price:
+#                upbit.buy_market_order(ticker, 50000)
+                unit = 50000 / target
+                upbit.buy_limit_order(ticker, target, unit)
+                print(f"현재시간 {now} 코인 {ticker} 을 {price} 가격에 50000원 어치 예약 매수했습니다.")
+
+            elif hold(coin_balance) == True and order_state(ticker) == False and limit <= price <= profit:
                 upbit.sell_limit_order(ticker, profit, coin_balance) # 목표가로 지정가 예약 매도
-                tickers.remove(ticker)
-                print(f"현재시간 {now} 코인 {ticker} 매수에 성공했습니다. 얼마나 오를까요? 5%만 오르길!\n매수가격: {target} -> 목표가격: {profit} 으로 예약 매도 주문했습니다.\n")
+                print(f"매수가격: {target} -> 목표가격: {profit} 으로 예약 매도 주문했습니다.\n")
 
             # 목표가에서 3% 이상 하락하면 손절
-            elif hold(coin_balance) == True and limit > price:
+            elif hold(coin_balance) == False and order_state(ticker) == True and limit > price:
                 cancel_order(ticker)
-                time.sleep(30)
+                time.sleep(5)
+                coin_balance = upbit.get_balance(ticker)
                 upbit.sell_market_order(ticker, coin_balance)
                 print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.\n")
     except:
