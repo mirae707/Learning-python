@@ -116,6 +116,11 @@ while True:
                 time.sleep(5)
                 coin_balance = upbit.get_balance(ticker)
                 upbit.sell_market_order(ticker, coin_balance)
+                tickers.remove(ticker)
                 print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.\n")
+
+            # 너무 많이 오른 코인은 위험하므로 제외
+            elif price > profit:
+                tickers.remove(ticker)
     except:
         pass
