@@ -13,5 +13,8 @@ upbit = pyupbit.Upbit(access, secret)
 
 for ticker in tickers:
     coin_balance = upbit.get_balance(ticker)  # 코인 잔고
-    upbit.sell_market_order(ticker, coin_balance)
-    print(f"{ticker} 를 팔았습니다.")
+    if coin_balance > 0:
+        upbit.sell_market_order(ticker, coin_balance)
+        print(f"{ticker} 를 팔았습니다.")
+
+print("다 팔았습니다.")
