@@ -75,7 +75,7 @@ while True:
             # 전날 거래 전량 매도
             if now.hour == 8 and 25 <= now.minute <= 59 and hold(coin_balance) == True:
                 cancel_order(ticker)
-                time.sleep(10)
+                time.sleep(30)
                 upbit.sell_market_order(ticker, coin_balance)
                 print(f"현재시간 {now} 하루가 끝났습니다.\n{ticker} 를 매도 하겠습니다. 오늘은 좋은 결과가 있기를!\n")
 
@@ -95,7 +95,7 @@ while True:
             # 목표가에서 3% 이상 하락하면 손절
             elif hold(coin_balance) == True and limit > price:
                 cancel_order(ticker)
-                time.sleep(10)
+                time.sleep(30)
                 upbit.sell_market_order(ticker, coin_balance)
                 print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.\n")
     except:
