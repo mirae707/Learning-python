@@ -87,7 +87,7 @@ while True:
             elif op_mode(my_balance) == True and hold(coin_balance) == False and  target <= price <= (target * 1.001) and ma < price:
                 # 매수
                 upbit.buy_market_order(ticker, 50000)
-                time.sleep(5)
+                time.sleep(30)
                 upbit.sell_limit_order(ticker, profit, coin_balance) # 목표가로 지정가 예약 매도
                 tickers.remove(ticker)
                 print(f"현재시간 {now} 코인 {ticker} 매수에 성공했습니다. 얼마나 오를까요? 5%만 오르길!\n매수가격: {target} -> 목표가격: {profit} 으로 예약 매도 주문했습니다.\n")
