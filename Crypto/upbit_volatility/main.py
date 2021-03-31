@@ -116,8 +116,5 @@ while True:
                 print(f"현재시간 {now} 너무 많이 떨어졌네요. {ticker}를 매도 하겠습니다.\n수익률은 {rate_of_profit}% 입니다.")
                 tickers.remove(ticker)
 
-            # 너무 많이 오른 코인은 위험하므로 제외
-            elif price > profit:
-                tickers.remove(ticker)
     except:
         pass
