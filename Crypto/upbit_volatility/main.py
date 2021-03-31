@@ -52,14 +52,17 @@ def hold(coin_balance):
 
 # 지정가 예약 주문 취소
 def cancel_order(ticker):
-    ret = upbit.get_order(ticker)[0].get('uuid')
-    upbit.cancel_order(ret)
-    print(f"{ticker}의 미체결된 거래내역을 취소했습니다.")
+    try:
+        ret = upbit.get_order(ticker)[0].get('uuid')
+        upbit.cancel_order(ret)
+        print(f"{ticker}의 미체결된 거래내역을 취소했습니다.")
+    except:
+        pass
 
 def order_state(ticker):
     try:
         state = upbit.get_order(ticker)[0].get('state')
-        if state > 'wait':
+        if state == 'wait':
             state = True
         else:
             state = False
